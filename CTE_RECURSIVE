@@ -1,0 +1,49 @@
+-- create
+CREATE TABLE STUDENTS (
+  StudentID INT PRIMARY KEY,
+  StudentName varchar(25),
+  StudentRanking INT
+);
+
+INSERT INTO STUDENTS VALUES
+(1, 'BALDO', NULL), -- 0
+(2, 'LUNINGNING', 1), -- 1
+(3, 'JOPAY',2), -- 2
+(4, 'POLICARPIO', 3), -- 3
+(5, 'SISA', 3), -- 3
+
+(6, 'PEDRO', 1), -- 1
+(7, 'ROBERTO', 6), -- 2
+(8, 'NARCISO', 6), -- 2
+
+(9, 'CARDO', 1), -- 1
+(10, 'PAOLO', 9), -- 2
+(11, 'BERNARDO', 10), -- 3
+(12, 'REGINALDO', 11); -- 4
+
+-- Creating Recursive CTE
+WITH CTE_RECURSIVE (studentrank, studentid, Name, Level) AS 
+(
+  SELECT
+      StudentRanking,
+      StudentID,
+      StudentName,
+      0 AS Level
+      
+  FROM STUDENTS
+  WHERE StudentRanking IS NULL
+  UNION ALL
+  
+  SELECT
+      S.StudentRanking,
+      S.StudentID,
+      S.StudentName,
+      C.Level + 1
+      
+  FROM STUDENTS AS S
+  INNER JOIN CTE_RECURSIVE AS C
+    ON S.StudentRanking = C.StudentID
+)
+
+SELECT studentrank AS 'LEADERBOARD', studentid AS 'STUDENT ID', Name AS 'STUDENT NAME', Level AS 'HIERARCHY POSITION'
+FROM CTE_RECURSIVE ORDER BY StudentID
