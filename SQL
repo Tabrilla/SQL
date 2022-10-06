@@ -1,0 +1,93 @@
+CREATE TABLE Customers(
+	CustomerID varchar(50) NULL,
+	Cust_Name varchar(50) NULL,
+	Address varchar(50) NULL
+);
+
+CREATE TABLE Items(
+	ItemID varchar(50) NULL,
+	ItemName varchar(50) NULL,
+	Price decimal(18, 2) NULL
+);
+
+CREATE TABLE Orders(
+	OrderID varchar(50) NULL,
+	OrderDate date NULL,
+	ItemID varchar(50) NULL,
+	CustomerID varchar(50) NULL
+);
+GO
+
+CREATE VIEW [REPORT] AS
+SELECT OrderID AS 'ORDER ID', OrderDate AS 'ORDER DATE', Cust_Name AS 'CUSTOMER NAME',
+Address AS 'CUSTOMER ADDRESS', ItemName AS 'ITEM NAME', PRICE 'ITEM PRICE' FROM Orders O
+JOIN Customers C ON C.CustomerID = O.CustomerID
+JOIN Items I ON I.ItemID = O.ItemID;
+GO
+
+INSERT INTO Customers VALUES
+('Cust-1', 'Badang', 'Makati'), ('Cust-2', 'Hanzo', 'Taguig'),
+('Cust-3', 'Lilia', 'Rizal'), ('Cust-4', 'Layla', 'Laguna'),
+('Cust-5', 'Lesley', 'Laguna'), ('Cust-6', 'Balmond', 'Makati'),
+('Cust-7', 'Chou', 'Navotas'), ('Cust-8', 'Eudora', 'Malabon'),
+('Cust-9', 'Miya', 'Taguig'), ('Cust-10', 'Cecilion', 'Navotas'),
+('Cust-11', 'Roger', 'Baguio'), ('Cust-12', 'Cong', 'Cebu'),
+('Cust-13', 'Emman', 'Cebu'), ('Cust-14', 'Jerome', 'Baguio'),
+('Cust-15', 'Gusion', 'Davao'), ('Cust-16', 'Lancelot', 'Iloilo'),
+('Cust-17', 'Granger', 'Antipolo'), ('Cust-18', 'Irithel', N'Makati'),
+('Cust-19', 'Alucard', 'Binondo'), ('Cust-20', 'Carmilla', N'Malabon');
+
+INSERT INTO Items VALUES
+('IT-1', 'Samsung S9', CAST(32000.00 AS Decimal(18, 2))),
+('IT-2', 'Samsung S10', CAST(40000.00 AS Decimal(18, 2))),
+('IT-3', 'Huawei P30', CAST(29000.00 AS Decimal(18, 2))),
+('IT-4', 'Huawei Mate30', CAST(31000.00 AS Decimal(18, 2))),
+('IT-5', 'Realme 6', CAST(9999.99 AS Decimal(18, 2))),
+('IT-6', 'Realme 6 Pro', CAST(11000.00 AS Decimal(18, 2))),
+('IT-7', 'Xiaomi Note 9', CAST(8000.00 AS Decimal(18, 2))),
+('IT-8', 'Xiaomi Note 10', CAST(11000.00 AS Decimal(18, 2))),
+('IT-9', 'LG V40', CAST(15000.00 AS Decimal(18, 2))),
+('IT-10', 'LG V50', CAST(23000.00 AS Decimal(18, 2)));
+
+INSERT INTO Orders VALUES
+('OR-1', CAST('2019-08-14' AS Date), 'IT-6', 'Cust-10'),
+('OR-2', CAST('2019-12-04' AS Date), 'IT-3', 'Cust-9'),
+('OR-3', CAST('2017-08-20' AS Date), 'IT-7', 'Cust-13'),
+('OR-4', CAST('2018-06-12' AS Date), 'IT-10', 'Cust-7'),
+('OR-5', CAST('2017-02-28' AS Date), 'IT-5', 'Cust-6'),
+('OR-6', CAST('2019-05-21' AS Date), 'IT-9', 'Cust-11'),
+('OR-7', CAST('2017-12-27' AS Date), 'IT-2', 'Cust-5'),
+('OR-8', CAST('2017-02-10' AS Date), 'IT-4', 'Cust-3'),
+('OR-9', CAST('2018-09-12' AS Date), 'IT-10', 'Cust-9'),
+('OR-10', CAST('2018-01-17' AS Date), 'IT-3', 'Cust-4'),
+('OR-11', CAST('2019-02-11' AS Date), 'IT-6', 'Cust-7'),
+('OR-12', CAST('2018-02-23' AS Date), 'IT-4', 'Cust-9'),
+('OR-13', CAST('2018-11-01' AS Date), 'IT-7', 'Cust-2'),
+('OR-14', CAST('2018-01-11' AS Date), 'IT-8', 'Cust-4'),
+('OR-15', CAST('2018-05-28' AS Date), 'IT-1', 'Cust-2'),
+('OR-16', CAST('2017-01-03' AS Date), 'IT-6', 'Cust-1'),
+('OR-17', CAST('2019-01-17' AS Date), 'IT-8', 'Cust-9'),
+('OR-18', CAST('2017-06-22' AS Date), 'IT-3', 'Cust-7'),
+('OR-19', CAST('2017-04-09' AS Date), 'IT-7', 'Cust-3'),
+('OR-20', CAST('2019-09-15' AS Date), 'IT-5', 'Cust-5'),
+('OR-21', CAST('2017-08-13' AS Date), 'IT-9', 'Cust-4');
+
+
+-- TASK 1
+SELECT * FROM [REPORT]
+
+--TASK 2
+SELECT * FROM [REPORT]
+WHERE [CUSTOMER ADDRESS] IN ('TAGUIG')
+
+--TASK 3
+SELECT [Customer Name], [Customer Address], [Item Name], [Item Price]
+FROM [REPORT]
+WHERE [Item Price] < (SELECT MIN([Item Price])
+FROM [REPORT]
+WHERE [Customer Name] = "Roger"
+);
+
+--TASK 4
+SELECT ItemName AS 'ITEM NAME', Price AS 'ORIGINAL PRICE', (Price) - (Price * 0.1) AS 'DISCOUNTED PRICE'
+FROM Items
